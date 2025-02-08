@@ -1,5 +1,6 @@
 export enum STORAGE_KEYS {
   FILE = "file",
+  CHAT = "chat",
   COLLECTION = "collection",
   CURRENT_WORKING_FILE_ID = "current-working-file-id",
 }

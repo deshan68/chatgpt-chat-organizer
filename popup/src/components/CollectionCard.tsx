@@ -1,76 +1,78 @@
-import { Checkbox, Flex, Text } from "@radix-ui/themes";
+import { Flex, Text } from "@radix-ui/themes";
 import FolderIcon from "./icons/FolderIcon";
-import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
+import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { useAppDispatch } from "../hooks/UseReduxType";
 import { navigate, PagesName } from "../slices/navigationSlice";
-import { Collection } from "../utils/types";
+import { _Collection } from "../constants/constants";
 
-const CollectionCard = ({
-  collection,
-  selectedCollections,
-  toggleSelection,
-}: {
-  collection: Collection;
-  selectedCollections?: string[];
-  toggleSelection?: (collectionId: string) => void;
-}) => {
+export interface CollectionCardProps {
+  title: string;
+  date: string;
+  items: string;
+}
+const CollectionCard = ({ id, name, date, chats }: _Collection) => {
   const dispatch = useAppDispatch();
-  const currentScreen = useAppSelector(
-    (state) => state.navigation.currentScreen
-  );
 
-  const handleCheckboxClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    toggleSelection && toggleSelection(collection.id);
-  };
-
-  const handleCardClick = () => {
-    dispatch(
-      navigate({
-        name: PagesName.AllFilesPage,
-        title: collection.name,
-        params: { collectionId: collection.id },
-      })
-    );
-  };
-
-  const isSelected =
-    selectedCollections && selectedCollections.includes(collection.id);
+  // const findTagsForCollection = (tags: string[]) => {
+  //   return tags
+  //     .map((tagId) => tagList.find((tag) => tag.id === tagId))
+  //     .filter((tag): tag is Tag => tag !== undefined);
+  // };
 
   return (
     <Flex
-      justify="between"
-      direction="column"
-      minHeight="100px"
-      minWidth="100px"
-      maxHeight="100px"
-      maxWidth="100px"
+      pl="1"
+      gapX={"4"}
       style={{
-        backgroundColor: "#E6E5FF",
-        borderRadius: "20%",
-        cursor: "pointer",
+        cursor: "default",
       }}
-      p="3"
-      onClick={handleCardClick}
+      onClick={() =>
+        dispatch(
+          navigate({
+            name: PagesName.ChatListPage,
+            title: name,
+            params: { collectionId: id },
+          })
+        )
+      }
     >
       <Flex justify="between" align="center">
         <FolderIcon />
-        {currentScreen?.name === PagesName.AllCollectionsPage && (
-          <Checkbox
-            size="1"
-            checked={isSelected}
-            onClick={handleCheckboxClick}
-          />
-        )}
       </Flex>
 
-      <Flex direction="column">
-        <Text size="1" weight="bold" trim="both">
-          {collection.name}
-        </Text>
-        <Text size="1" weight="light">
-          {collection.fileIds.length === 0 ? "0" : collection.fileIds.length}
-          &nbsp;items
-        </Text>
+      <Flex
+        py={"2"}
+        align={"center"}
+        width={"100%"}
+        style={{
+          borderBottom: "1px solid #EAEAEA",
+        }}
+      >
+        <Flex direction={"column"}>
+          <Text weight="bold" trim="both" style={{ fontSize: 11 }}>
+            {name}
+          </Text>
+          <Text weight="light" style={{ fontSize: 10 }}>
+            {date} - {chats.length} item
+          </Text>
+        </Flex>
+        {/* 
+        <Flex style={{ marginLeft: "auto" }}>
+          {findTagsForCollection(tags).map((t) => (
+            <Flex
+              style={{
+                backgroundColor: t.colorCode,
+                height: 10,
+                width: 10,
+                borderRadius: 5,
+                border: "1px solid rgb(255, 255, 255)",
+                marginLeft: -3,
+              }}
+            />
+          ))}
+        </Flex> */}
+
+        <ChevronRightIcon style={{ marginLeft: "auto" }} color="#87878C" />
       </Flex>
     </Flex>
   );

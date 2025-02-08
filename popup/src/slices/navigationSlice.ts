@@ -4,12 +4,14 @@ export enum PagesName {
   HomePage = "HomePage",
   AllCollectionsPage = "AllCollectionsPage",
   AllFilesPage = "AllFilesPage",
+  CollectionsPage = "CollectionsPage",
+  ChatListPage = "ChatListPage",
 }
 
 interface Screen {
   name: PagesName | string;
   title: string;
-  params?: Record<string, any>;
+  params?: Record<string, any> | null;
 }
 
 interface NavigationState {
@@ -35,6 +37,7 @@ const navigationSlice = createSlice({
     goBack: (state) => {
       if (state.history.length > 0) {
         state.currentScreen = state.history.pop()!;
+        state.currentScreen.params = null;
       }
     },
   },

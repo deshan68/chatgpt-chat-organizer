@@ -1,7 +1,9 @@
 #root {
   width: 350px;
   height: 600px;
+  overflow: hidden;
 }
 body {
   margin: 0;
+  height: 100vh;
 }

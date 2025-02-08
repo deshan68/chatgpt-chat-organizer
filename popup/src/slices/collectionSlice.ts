@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Collection } from "../utils/types";
+import { _Collection } from "../constants/constants";
 
 interface CollectionsState {
-  collections: Collection[];
+  collections: _Collection[];
 }
 
 const initialState: CollectionsState = {
@@ -13,7 +13,7 @@ const collectionSlice = createSlice({
   name: "collection",
   initialState,
   reducers: {
-    addCollection: (state, action: PayloadAction<Collection>) => {
+    addCollection: (state, action: PayloadAction<_Collection>) => {
       state.collections.push(action.payload);
     },
     deleteCollection: (state, action: PayloadAction<string[]>) => {
@@ -21,40 +21,20 @@ const collectionSlice = createSlice({
         (c) => !action.payload.includes(c.id)
       );
     },
-    removeFileIdFromCollection: (state, action: PayloadAction<string>) => {
-      state.collections = state.collections.map((c) =>
-        c.fileIds.includes(action.payload)
-          ? { ...c, fileIds: c.fileIds.filter((id) => id !== action.payload) }
-          : c
-      );
+    loadCollections: (state, action: PayloadAction<_Collection[]>) => {
+      state.collections = action.payload;
+      console.log(state.collections);
     },
-    addFileToCollection: (
-      state,
-      action: PayloadAction<{ fileId: string; collectionId: string }>
-    ) => {
-      state.collections = state.collections.map((c) => {
-        if (c.id === action.payload.collectionId) {
-          c.fileIds.push(action.payload.fileId);
-        }
-        return c;
-      });
-    },
-    removeFileFromCollection: (
-      state,
-      action: PayloadAction<{ fileId: string; collectionId: string }>
-    ) => {
+    addAsFavorite: (state, action: PayloadAction<{ collectionId: string }>) => {
       state.collections = state.collections.map((c) => {
         if (c.id === action.payload.collectionId) {
           return {
             ...c,
-            fileIds: c.fileIds.filter((id) => id !== action.payload.fileId),
+            isFavorite: !c.isFavorite,
           };
         }
         return c;
       });
-    },
-    loadCollections: (state, action: PayloadAction<Collection[]>) => {
-      state.collections = action.payload;
     },
   },
 });
@@ -62,9 +42,7 @@ const collectionSlice = createSlice({
 export const {
   addCollection,
   deleteCollection,
-  removeFileIdFromCollection,
   loadCollections,
-  addFileToCollection,
-  removeFileFromCollection,
+  addAsFavorite,
 } = collectionSlice.actions;
 export default collectionSlice.reducer;
