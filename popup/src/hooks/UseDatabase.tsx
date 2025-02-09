@@ -110,7 +110,69 @@ const UseDatabase = () => {
     dispatch(loadCollections(updatedCollections));
   };
 
-  return { insertChat, insertCollection, setAsFavorite, deleteCollection };
+  const insertTagToChat = async (tagId: string, chatId: string) => {
+    const checkTagExists = chats
+      .find((c) => c.id === chatId)
+      ?.tags.includes(tagId);
+    if (checkTagExists) return removeTagFromChat(tagId, chatId);
+
+    const updatedChats = chats.map((c) => {
+      if (c.id === chatId) {
+        return {
+          ...c,
+          tags: [...c.tags, tagId],
+        };
+      }
+      return c;
+    });
+
+    await setStorage(STORAGE_KEYS.CHAT, JSON.stringify(updatedChats));
+    dispatch(loadChats(updatedChats));
+  };
+
+  const removeTagFromChat = async (tagId: string, chatId: string) => {
+    const updatedChats = chats.map((c) => {
+      if (c.id === chatId) {
+        return {
+          ...c,
+          tags: c.tags.filter((t) => t !== tagId),
+        };
+      }
+      return c;
+    });
+
+    await setStorage(STORAGE_KEYS.CHAT, JSON.stringify(updatedChats));
+    dispatch(loadChats(updatedChats));
+  };
+
+  const deleteChat = async (chatId: string) => {
+    const updatedCollections = collections.map((c) => {
+      return {
+        ...c,
+        chats: c.chats.filter((chat) => chat !== chatId),
+      };
+    });
+
+    const updatedChats = chats.filter((c) => c.id !== chatId);
+
+    await setStorage(
+      STORAGE_KEYS.COLLECTION,
+      JSON.stringify(updatedCollections)
+    );
+    await setStorage(STORAGE_KEYS.CHAT, JSON.stringify(updatedChats));
+
+    dispatch(loadCollections(updatedCollections));
+    dispatch(loadChats(updatedChats));
+  };
+
+  return {
+    insertChat,
+    insertCollection,
+    setAsFavorite,
+    deleteCollection,
+    insertTagToChat,
+    deleteChat,
+  };
 };
 
 export default UseDatabase;
