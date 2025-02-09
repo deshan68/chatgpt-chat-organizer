@@ -1,16 +1,51 @@
-import { checkIsValidUrl } from "../shared/utils";
+import { ChatDetails, UrlCheckResult } from "../shared/types";
+import { checkUrlType } from "../shared/utils";
 
-export const onOpenPopup = async (): Promise<boolean> => {
+export const onOpenPopup = async (): Promise<UrlCheckResult> => {
   const url = window.location.href;
-  const urlValidation = checkIsValidUrl(url);
-  return urlValidation;
+  const urlType = checkUrlType(url);
+
+  return urlType;
 };
 
-export const onLoadExcalidrawFile = async (): Promise<string> => {
-  const excalidrawFile = window.localStorage.getItem("excalidraw");
-
-  return excalidrawFile || "";
+export const isChatSelected = async (): Promise<boolean> => {
+  const path = window.location.pathname;
+  return path.startsWith("/c/") || path.startsWith("/a/chat/s/");
 };
+
+export const getCurrentChatDetails = async (
+  urlType: UrlCheckResult
+): Promise<ChatDetails> => {
+  const url = window.location.href;
+  const path = window.location.pathname;
+  if (urlType.isChatGPT) {
+    const chatName = getInnerTextByHref();
+    const chatID = path.split("/").pop() || "";
+    const chatUrl = url;
+
+    return { chatName, chatID, chatUrl };
+  }
+
+  const selectedChatDiv = document.getElementsByClassName("f9edaa3c b64fb9ae");
+  const innerText = (selectedChatDiv[0] as HTMLElement).innerText || null;
+  const chatName = innerText;
+  const chatID = path.split("/").pop() || "";
+  const chatUrl = url;
+
+  return { chatName, chatID, chatUrl };
+};
+
+function getInnerTextByHref() {
+  const path = window.location.pathname;
+  const links = document.getElementsByTagName("a");
+
+  for (let link of links) {
+    if (link.getAttribute("href") === path) {
+      return link.innerText;
+    }
+  }
+  return null;
+}
 
 export const onPushExcalidrawFile = async (
   excalidraw: string

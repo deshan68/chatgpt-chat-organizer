@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Chat Manager V2",
-  "version": "1.0.4",
+  "name": "ChatGPT Chat Manager V3",
+  "version": "3.0.1",
   "description": "A web extension that allows users to create folders and save their chats in relevant folders.",
   "icons": {
     "16": "icon-16.png",
@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "js": ["assets/content.js"],
-      "matches": ["https://excalidraw.com/*"]
+      "matches": ["https://chat.deepseek.com/*", "https://chatgpt.com/*"]
     }
   ],
   "background": {
@@ -23,10 +23,10 @@
   },
   "web_accessible_resources": [
     {
-      "matches": ["https://excalidraw.com/*"],
+      "matches": ["https://chat.deepseek.com/*", "https://chatgpt.com/*"],
       "resources": ["assets/*"]
     }
   ],
   "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["https://excalidraw.com/"]
+  "host_permissions": ["https://chat.deepseek.com/*", "https://chatgpt.com/*"]
 }

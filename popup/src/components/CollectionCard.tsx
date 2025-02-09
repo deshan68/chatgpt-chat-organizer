@@ -1,17 +1,20 @@
 import { Flex, Text } from "@radix-ui/themes";
 import FolderIcon from "./icons/FolderIcon";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { useAppDispatch } from "../hooks/UseReduxType";
+import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { navigate, PagesName } from "../slices/navigationSlice";
-import { _Collection } from "../constants/constants";
+import { _Collection } from "../../../shared/types";
 
 export interface CollectionCardProps {
-  title: string;
+  name: string;
   date: string;
-  items: string;
+  chats: string[];
+  id: string;
+  isFavorite: boolean;
 }
-const CollectionCard = ({ id, name, date, chats }: _Collection) => {
+const CollectionCard = ({ id, name, date, chats }: CollectionCardProps) => {
   const dispatch = useAppDispatch();
+  const themeColor = useAppSelector((state) => state.config.themeColor);
 
   // const findTagsForCollection = (tags: string[]) => {
   //   return tags
@@ -37,7 +40,7 @@ const CollectionCard = ({ id, name, date, chats }: _Collection) => {
       }
     >
       <Flex justify="between" align="center">
-        <FolderIcon />
+        <FolderIcon color={themeColor} />
       </Flex>
 
       <Flex

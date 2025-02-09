@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { _Collection } from "../constants/constants";
+import { _Collection } from "../../../shared/types";
 
 interface CollectionsState {
   collections: _Collection[];

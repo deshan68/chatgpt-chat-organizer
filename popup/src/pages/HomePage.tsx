@@ -6,23 +6,40 @@ import { LaptopIcon } from "@radix-ui/react-icons";
 import { PagesName } from "../slices/navigationSlice";
 import FavoriteSection from "../components/FavoriteSection";
 import TagsSection from "../components/TagsSection";
-import { _Collection, DB } from "../constants/constants";
 import {
   getAllKeys,
   getAllStorage,
   getStorage,
   removeStorage,
+  setStorage,
 } from "../../../shared/chrome-utils";
-import { STORAGE_KEYS } from "../../../shared/types";
-
-const lst1: CategoryListType[] = [
-  {
-    icon: <LaptopIcon color="#00B48C" />,
-    title: "All Collections",
-  },
-];
+import { _Collection, Chat, STORAGE_KEYS } from "../../../shared/types";
+import { useAppSelector } from "../hooks/UseReduxType";
+import { useAppContext } from "../context/AppProvider";
+import InvalidUrlMessage from "../components/InvalidUrlMessage";
+import { getFilteredCollection, isValidCurrentChat } from "../utils/utils";
 
 const HomePage = () => {
+  const { isValidUrl } = useAppContext();
+
+  const urlType = useAppSelector((state) => state.config.urlType);
+  const currentChatDetails = useAppSelector(
+    (state) => state.config.currentChatDetails
+  );
+  const collections = useAppSelector((state) => state.collection.collections);
+  const filteredCollections = getFilteredCollection(
+    useAppSelector((state) => state.collection.collections),
+    urlType
+  );
+  const themeColor = useAppSelector((state) => state.config.themeColor);
+
+  const lst1: CategoryListType[] = [
+    {
+      icon: <LaptopIcon color={themeColor} />,
+      title: "All Collections",
+    },
+  ];
+
   const clear = async () => {
     const keys = await getAllKeys();
     await removeStorage(keys);
@@ -31,10 +48,52 @@ const HomePage = () => {
   const show = async () => {
     const allStorage = await getAllStorage();
     console.log("allStorage", allStorage);
-    
-    const e = await getStorage<_Collection[]>(STORAGE_KEYS.COLLECTION);
-    console.log("e", e);
+
+    const chats = await getStorage<Chat[]>(STORAGE_KEYS.CHAT);
+    const coll = await getStorage<_Collection[]>(STORAGE_KEYS.COLLECTION);
+    console.log("chats", chats);
+    console.log("coll", coll);
   };
+
+  const handleAddToCollection = async (collectionId: string) => {
+    if (!isValidCurrentChat(currentChatDetails)) return;
+
+    const collection = collections.find((c) => c.id === collectionId);
+    if (!collection) return;
+
+    const updatedCollection = {
+      ...collection,
+      chats: [...collection.chats, currentChatDetails.chatID],
+    };
+
+    const updatedCollections = collections.map((c) =>
+      c.id === collectionId ? updatedCollection : c
+    );
+
+    await setStorage(
+      STORAGE_KEYS.COLLECTION,
+      JSON.stringify(updatedCollections)
+    );
+
+    updateChat();
+  };
+
+  const updateChat = async () => {
+    const chat = (await getStorage<Chat[]>(STORAGE_KEYS.CHAT)) || [];
+
+    const updatedChat: Chat = {
+      id: currentChatDetails.chatID,
+      name: currentChatDetails.chatName!,
+      date: new Date().toISOString(),
+      tags: [],
+    };
+
+    const updatedChatList = [...chat, updatedChat];
+
+    await setStorage(STORAGE_KEYS.CHAT, JSON.stringify(updatedChatList));
+  };
+
+  if (!isValidUrl) return <InvalidUrlMessage />;
 
   return (
     <Flex direction="column" gap="2" style={{ height: "100%" }}>
@@ -65,8 +124,9 @@ const HomePage = () => {
           fontSize: "10px",
           paddingInline: "20px",
           paddingBlock: "8px",
-          backgroundColor: "#00B48C",
+          backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+          // display: "none",
         }}
         onClick={() => show()}
       >
@@ -82,8 +142,9 @@ const HomePage = () => {
           fontSize: "10px",
           paddingInline: "20px",
           paddingBlock: "8px",
-          backgroundColor: "#00B48C",
+          backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+          // display: "none",
         }}
         onClick={() => clear()}
       >
@@ -102,7 +163,7 @@ const HomePage = () => {
               fontSize: "10px",
               paddingInline: "20px",
               paddingBlock: "8px",
-              backgroundColor: "#00B48C",
+              backgroundColor: themeColor,
               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
             }}
           >
@@ -111,16 +172,16 @@ const HomePage = () => {
         </Dialog.Trigger>
         <Dialog.Content maxWidth={"200px"} style={{ borderRadius: "3%" }}>
           <Flex direction="column">
-            {DB.map((t) => (
+            {filteredCollections.map((c) => (
               <Button
-                // onClick={() => handleAddToCollection(c.id)}
+                onClick={() => handleAddToCollection(c.id)}
                 size="1"
                 mb="1"
                 variant="soft"
                 color="gray"
                 // disabled={isAlreadyAdded(c.id)}
               >
-                {t.name}
+                {c.name}
               </Button>
             ))}
           </Flex>

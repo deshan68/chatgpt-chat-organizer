@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import counterReducer from "../slices/counterSlice";
 import navigationReducer from "../slices/navigationSlice";
 import collectionSliceReducer from "../slices/collectionSlice";
-import fileSliceReducer from "../slices/fileSlice";
+import chatSliceReducer from "../slices/chatSlice";
 import configSliceReducer from "../slices/configSlice";
 
 const store = configureStore({
@@ -10,7 +10,7 @@ const store = configureStore({
     counter: counterReducer,
     navigation: navigationReducer,
     collection: collectionSliceReducer,
-    file: fileSliceReducer,
+    chat: chatSliceReducer,
     config: configSliceReducer,
   },
 });

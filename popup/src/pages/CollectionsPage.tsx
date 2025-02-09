@@ -10,12 +10,12 @@ import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { goBack } from "../slices/navigationSlice";
 import { ChevronLeftIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import CollectionCard from "../components/CollectionCard";
-import { _Collection } from "../constants/constants";
 import { useState } from "react";
 import { setStorage } from "../../../shared/chrome-utils";
 import { STORAGE_KEYS } from "../../../shared/types";
 import { CollectionInstance } from "../lib/collectionInstance";
 import { addCollection } from "../slices/collectionSlice";
+import { findCollectionType, getFilteredCollection } from "../utils/utils";
 
 const CollectionsPage = () => {
   const dispatch = useAppDispatch();
@@ -24,6 +24,8 @@ const CollectionsPage = () => {
     (state) => state.navigation.currentScreen
   );
   const collections = useAppSelector((state) => state.collection.collections);
+  const themeColor = useAppSelector((state) => state.config.themeColor);
+  const urlType = useAppSelector((state) => state.config.urlType);
   const his = useAppSelector((state) => state.navigation.history);
 
   const [collectionName, setCollectionName] = useState<string>("");
@@ -36,7 +38,10 @@ const CollectionsPage = () => {
   };
 
   const handleAddHandle = async () => {
-    const collection = new CollectionInstance(collectionName);
+    const collection = new CollectionInstance(
+      collectionName,
+      findCollectionType(urlType)
+    );
 
     const updatedCollections = [...collections, collection.getCollection()];
 
@@ -51,6 +56,7 @@ const CollectionsPage = () => {
   if (!currentScreen) {
     return <div>No screen to display</div>;
   }
+
   return (
     <Flex direction="column" px="4">
       {/* header */}
@@ -62,13 +68,13 @@ const CollectionsPage = () => {
           align="center"
         >
           <Flex>
-            <ChevronLeftIcon color="#00B48C" />
+            <ChevronLeftIcon color={themeColor} />
           </Flex>
           <Text
             size="1"
             weight="regular"
             style={{
-              color: "#00B48C",
+              color: themeColor,
             }}
           >
             {his[his.length - 1].title}
@@ -96,9 +102,9 @@ const CollectionsPage = () => {
                     backgroundColor: "#ffff",
                     borderRadius: 10,
                     padding: 1,
-                    border: "0.5px solid #00B48C",
+                    border: `0.5px solid ${themeColor}`,
                   }}
-                  color="#00B48C"
+                  color={themeColor}
                   height={12}
                   width={12}
                 />
@@ -116,7 +122,7 @@ const CollectionsPage = () => {
       </Flex>
 
       <Flex gapY="2" direction={"column"}>
-        {collections.map((l) => (
+        {getFilteredCollection(collections, urlType).map((l) => (
           <CollectionCard
             id={l.id}
             name={l.name}
@@ -156,7 +162,12 @@ const CollectionsPage = () => {
             >
               Cancel
             </Button>
-            <Button size="1" onClick={handleCreateCollection}>
+            <Button
+              size="1"
+              color="gray"
+              highContrast
+              onClick={handleCreateCollection}
+            >
               Create
             </Button>
           </Flex>

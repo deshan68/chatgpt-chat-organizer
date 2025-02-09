@@ -26,8 +26,9 @@ const InvalidUrlMessage = () => {
           🚨 Invalid Website Detected
         </Text>
         <Text size="1">
-          This extension only works on <strong>excalidraw.com</strong>. Please
-          navigate to the correct website to use this extension.
+          This extension only works on <strong>chat.deepseek.com</strong> or{" "}
+          <strong>chatgpt.com</strong>. Please navigate to the correct website
+          to use this extension.
         </Text>
       </Flex>
     </Flex>

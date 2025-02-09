@@ -1,6 +1,6 @@
-import { Message, MessageTypes } from "../shared/types";
+import { Message, MessageTypes, UrlCheckResult } from "../shared/types";
 import {
-  onLoadExcalidrawFile,
+  getCurrentChatDetails,
   onOpenPopup,
   onPullFileNameFromExcalidraw,
   onPushExcalidrawFile,
@@ -17,10 +17,12 @@ const registerEventListeners = () => {
           });
           return true;
         }
-        case MessageTypes.LOAD_EXCALIDRAW_FILE: {
-          onLoadExcalidrawFile().then((excalidraw) => {
-            sendResponse(excalidraw);
-          });
+        case MessageTypes.PULL_CURRENT_URL_TYPE: {
+          getCurrentChatDetails(message.body?.urlType as UrlCheckResult).then(
+            (chatDetails) => {
+              sendResponse(chatDetails);
+            }
+          );
           return true;
         }
         case MessageTypes.PUSH_EXCALIDRAW_FILE: {

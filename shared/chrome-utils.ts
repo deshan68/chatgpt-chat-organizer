@@ -9,8 +9,12 @@ export const sendMessageToContent = async <T = void>(
   });
 
   if (tab.id) {
-    const response = await chrome.tabs.sendMessage(tab.id, message);
-    return response;
+    try {
+      const response = await chrome.tabs.sendMessage(tab.id, message);
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 

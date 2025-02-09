@@ -11,6 +11,7 @@ export enum MessageTypes {
   PUSH_EXCALIDRAW_FILE = "PUSH_EXCALIDRAW_FILE",
   PUSH_CURRENT_WORKING_FILE_NAME = "PUSH_CURRENT_WORKING_FILE_NAME",
   PULL_CURRENT_WORKING_FILE_NAME = "PULL_CURRENT_WORKING_FILE_NAME",
+  PULL_CURRENT_URL_TYPE = "PULL_CURRENT_URL_TYPE",
 }
 
 export type Message = {
@@ -18,31 +19,39 @@ export type Message = {
   body?: Record<string, unknown>;
 };
 
-export type ExcalidrawType = {
-  angle: number;
-  backgroundColor: string;
-  boundElements: any[] | null;
-  fillStyle: string;
-  frameId: string | null;
-  groupIds: string[];
-  height: number;
+export interface UrlCheckResult {
+  isDeepSeek: boolean;
+  isChatGPT: boolean;
+}
+
+export interface ChatDetails {
+  chatName: string | null;
+  chatID: string;
+  chatUrl: string;
+}
+
+export enum CollectionType {
+  CHAT_GPT = "chat-gpt",
+  DEEP_SEEK = "deep-seek",
+}
+export interface _Collection {
   id: string;
-  index: string;
-  isDeleted: boolean;
-  link: string | null;
-  locked: boolean;
-  opacity: number;
-  roughness: number;
-  roundness: any | null;
-  seed: number;
-  strokeColor: string;
-  strokeStyle: string;
-  strokeWidth: number;
-  type: string;
-  updated: number;
-  version: number;
-  versionNonce: number;
-  width: number;
-  x: number;
-  y: number;
-};
+  name: string;
+  date: string;
+  isFavorite: boolean;
+  chats: string[];
+  collectionType: CollectionType;
+}
+
+export interface Chat {
+  id: string;
+  name: string;
+  date: string;
+  tags: string[];
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  colorCode: string;
+}

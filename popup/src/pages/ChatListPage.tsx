@@ -3,10 +3,10 @@ import { DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { goBack } from "../slices/navigationSlice";
 import ChatCard from "../components/ChatCard";
-import { _Collection, Chat, chatList, DB } from "../constants/constants";
 import { addAsFavorite } from "../slices/collectionSlice";
 import { setStorage } from "../../../shared/chrome-utils";
-import { STORAGE_KEYS } from "../../../shared/types";
+import { Chat, STORAGE_KEYS } from "../../../shared/types";
+import { getFilteredCollection } from "../utils/utils";
 
 const ChatListPage = () => {
   const dispatch = useAppDispatch();
@@ -15,7 +15,13 @@ const ChatListPage = () => {
   );
   const his = useAppSelector((state) => state.navigation.history);
   const collectionId = currentScreen?.params?.collectionId || null;
-  const collections = useAppSelector((state) => state.collection.collections);
+  const urlType = useAppSelector((state) => state.config.urlType);
+  const chats = useAppSelector((state) => state.chat.chats);
+  const collections = getFilteredCollection(
+    useAppSelector((state) => state.collection.collections),
+    urlType
+  );
+  const themeColor = useAppSelector((state) => state.config.themeColor);
 
   const tagId = currentScreen?.params?.tagId || null;
 
@@ -26,20 +32,24 @@ const ChatListPage = () => {
   };
 
   const getFilesByCollectionId = (): Chat[] => {
-    // if (!collectionId) return files;
-    const filteredIds = DB.find((c) => c.id === collectionId)?.chats;
-    return chatList.filter((c) => filteredIds?.includes(c.id));
+    const filteredIds = collections.find((c) => c.id === collectionId)?.chats;
+    console.log("filteredIds", filteredIds);
+    const filteredChats = chats.filter((c) => filteredIds?.includes(c.id));
+    console.log("chatList", filteredChats);
+    return filteredChats;
   };
 
   const getChatsByTagId = (): Chat[] => {
-    return chatList.filter((c) => c.tags.includes(tagId));
+    return chats.filter((c) => c.tags.includes(tagId));
   };
 
   const getChatList = (): Chat[] => {
+    console.log("collectionId", collectionId);
+    console.log("tagId", tagId);
     if (collectionId) return getFilesByCollectionId();
     if (tagId) return getChatsByTagId();
 
-    return chatList;
+    return chats;
   };
 
   const handleFavorite = async () => {
@@ -81,13 +91,13 @@ const ChatListPage = () => {
           align="center"
         >
           <Flex>
-            <ChevronLeftIcon color="#00B48C" />
+            <ChevronLeftIcon color={themeColor} />
           </Flex>
           <Text
             size="1"
             weight="regular"
             style={{
-              color: "#00B48C",
+              color: themeColor,
             }}
           >
             {his[his.length - 1].title}
@@ -105,24 +115,25 @@ const ChatListPage = () => {
           <Text size="1" weight="regular" style={{ textAlign: "center" }}>
             {getShortTxt(currentScreen.title)}
           </Text>
-
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <CaretDownIcon
-                style={{ backgroundColor: "#E3E3E8", borderRadius: 10 }}
-                height={12}
-                width={12}
-              />
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content size="1" color="gray" variant="soft">
-              <DropdownMenu.Item>Rename</DropdownMenu.Item>
-              <DropdownMenu.Item>Save Current Chat</DropdownMenu.Item>
-              <DropdownMenu.Item onClick={() => handleFavorite()}>
-                {getFavoriteStatus() ? "Remove From Favorite" : "Favorite"}
-              </DropdownMenu.Item>
-              <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+          {collectionId && (
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <CaretDownIcon
+                  style={{ backgroundColor: "#E3E3E8", borderRadius: 10 }}
+                  height={12}
+                  width={12}
+                />
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content size="1" color="gray" variant="soft">
+                <DropdownMenu.Item>Rename</DropdownMenu.Item>
+                <DropdownMenu.Item>Save Current Chat</DropdownMenu.Item>
+                <DropdownMenu.Item onClick={() => handleFavorite()}>
+                  {getFavoriteStatus() ? "Remove From Favorite" : "Favorite"}
+                </DropdownMenu.Item>
+                <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          )}
         </Flex>
 
         <Flex style={{ flex: 1, height: 3 }} />

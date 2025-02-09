@@ -1,6 +1,7 @@
 import { DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Chat, Tag, tagList } from "../constants/constants";
+import { tagList } from "../constants/constants";
+import { Chat, Tag } from "../../../shared/types";
 
 const ChatCard = ({ name, tags, date }: Chat) => {
   const findTagsForCollection = (tags: string[]) => {
