@@ -6,10 +6,12 @@ import ChatCard from "../components/ChatCard";
 import { Chat } from "../../../shared/types";
 import { getFilteredCollection, isCurrentChatFound } from "../utils/utils";
 import UseDatabase from "../hooks/UseDatabase";
+import { useConfirmation } from "../context/ConfirmationContext";
 
 const ChatListPage = () => {
   const dispatch = useAppDispatch();
   const { insertChat, setAsFavorite, deleteCollection } = UseDatabase();
+  const { showConfirmation } = useConfirmation();
   const currentScreen = useAppSelector(
     (state) => state.navigation.currentScreen
   );
@@ -57,6 +59,17 @@ const ChatListPage = () => {
       (c) => c.id === collectionId
     )!.isFavorite;
     return isFavorite;
+  };
+
+  const handleDeleteCollection = () => {
+    showConfirmation({
+      title: "Delete Collection",
+      message: "Are you sure you want to delete this collection?",
+      onConfirm: () => {
+        deleteCollection(collectionId);
+        dispatch(goBack());
+      },
+    });
   };
 
   if (!currentScreen) {
@@ -118,10 +131,7 @@ const ChatListPage = () => {
                   {getFavoriteStatus() ? "Remove From Favorite" : "Favorite"}
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
-                  onClick={() => {
-                    deleteCollection(collectionId);
-                    dispatch(goBack());
-                  }}
+                  onClick={() => handleDeleteCollection()}
                   color="red"
                 >
                   Delete
