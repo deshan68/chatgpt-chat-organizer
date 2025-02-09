@@ -37,9 +37,7 @@ const ChatListPage = () => {
 
   const getFilesByCollectionId = (): Chat[] => {
     const filteredIds = collections.find((c) => c.id === collectionId)?.chats;
-    console.log("filteredIds", filteredIds);
     const filteredChats = chats.filter((c) => filteredIds?.includes(c.id));
-    console.log("chatList", filteredChats);
     return filteredChats;
   };
 

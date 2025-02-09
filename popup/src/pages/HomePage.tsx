@@ -1,6 +1,5 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes";
 import HomeHeader from "../components/HomeHeader";
-import SearchBar from "../components/SearchBar";
 import Category, { CategoryListType } from "../components/Category";
 import { LaptopIcon } from "@radix-ui/react-icons";
 import { PagesName } from "../slices/navigationSlice";
@@ -57,7 +56,7 @@ const HomePage = () => {
   return (
     <Flex direction="column" gap="2" style={{ height: "100%" }}>
       <HomeHeader />
-      <SearchBar />
+      {/* <SearchBar /> */}
 
       <Flex
         direction="column"
@@ -85,7 +84,7 @@ const HomePage = () => {
           paddingBlock: "8px",
           backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-          // display: "none",
+          display: "none",
         }}
         onClick={() => show()}
       >
@@ -103,7 +102,7 @@ const HomePage = () => {
           paddingBlock: "8px",
           backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-          // display: "none",
+          display: "none",
         }}
         onClick={() => clear()}
       >

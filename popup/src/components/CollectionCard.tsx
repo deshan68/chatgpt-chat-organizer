@@ -16,12 +16,6 @@ const CollectionCard = ({ id, name, date, chats }: CollectionCardProps) => {
   const dispatch = useAppDispatch();
   const themeColor = useAppSelector((state) => state.config.themeColor);
 
-  // const findTagsForCollection = (tags: string[]) => {
-  //   return tags
-  //     .map((tagId) => tagList.find((tag) => tag.id === tagId))
-  //     .filter((tag): tag is Tag => tag !== undefined);
-  // };
-
   return (
     <Flex
       pl="1"
