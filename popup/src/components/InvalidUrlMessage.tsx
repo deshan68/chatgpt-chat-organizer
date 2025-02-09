@@ -6,10 +6,11 @@ const InvalidUrlMessage = () => {
       direction="column"
       align="center"
       justify="center"
-      py="6"
+      px="4"
       style={{
         width: "100%",
         textAlign: "center",
+        height: 600,
       }}
     >
       <Flex

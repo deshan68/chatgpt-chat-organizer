@@ -22,7 +22,7 @@ export const getFilteredCollection = (
   );
 };
 
-export const isValidCurrentChat = (currentChat: ChatDetails): boolean => {
+export const isCurrentChatFound = (currentChat: ChatDetails): boolean => {
   return (
     currentChat.chatID !== "" &&
     currentChat.chatName !== null &&

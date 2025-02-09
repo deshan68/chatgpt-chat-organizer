@@ -11,22 +11,19 @@ import {
   getAllStorage,
   getStorage,
   removeStorage,
-  setStorage,
 } from "../../../shared/chrome-utils";
 import { _Collection, Chat, STORAGE_KEYS } from "../../../shared/types";
 import { useAppSelector } from "../hooks/UseReduxType";
 import { useAppContext } from "../context/AppProvider";
 import InvalidUrlMessage from "../components/InvalidUrlMessage";
-import { getFilteredCollection, isValidCurrentChat } from "../utils/utils";
+import { getFilteredCollection } from "../utils/utils";
+import UseDatabase from "../hooks/UseDatabase";
 
 const HomePage = () => {
   const { isValidUrl } = useAppContext();
+  const { insertChat } = UseDatabase();
 
   const urlType = useAppSelector((state) => state.config.urlType);
-  const currentChatDetails = useAppSelector(
-    (state) => state.config.currentChatDetails
-  );
-  const collections = useAppSelector((state) => state.collection.collections);
   const filteredCollections = getFilteredCollection(
     useAppSelector((state) => state.collection.collections),
     urlType
@@ -53,44 +50,6 @@ const HomePage = () => {
     const coll = await getStorage<_Collection[]>(STORAGE_KEYS.COLLECTION);
     console.log("chats", chats);
     console.log("coll", coll);
-  };
-
-  const handleAddToCollection = async (collectionId: string) => {
-    if (!isValidCurrentChat(currentChatDetails)) return;
-
-    const collection = collections.find((c) => c.id === collectionId);
-    if (!collection) return;
-
-    const updatedCollection = {
-      ...collection,
-      chats: [...collection.chats, currentChatDetails.chatID],
-    };
-
-    const updatedCollections = collections.map((c) =>
-      c.id === collectionId ? updatedCollection : c
-    );
-
-    await setStorage(
-      STORAGE_KEYS.COLLECTION,
-      JSON.stringify(updatedCollections)
-    );
-
-    updateChat();
-  };
-
-  const updateChat = async () => {
-    const chat = (await getStorage<Chat[]>(STORAGE_KEYS.CHAT)) || [];
-
-    const updatedChat: Chat = {
-      id: currentChatDetails.chatID,
-      name: currentChatDetails.chatName!,
-      date: new Date().toISOString(),
-      tags: [],
-    };
-
-    const updatedChatList = [...chat, updatedChat];
-
-    await setStorage(STORAGE_KEYS.CHAT, JSON.stringify(updatedChatList));
   };
 
   if (!isValidUrl) return <InvalidUrlMessage />;
@@ -174,7 +133,7 @@ const HomePage = () => {
           <Flex direction="column">
             {filteredCollections.map((c) => (
               <Button
-                onClick={() => handleAddToCollection(c.id)}
+                onClick={() => insertChat(c.id)}
                 size="1"
                 mb="1"
                 variant="soft"

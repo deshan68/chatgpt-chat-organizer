@@ -11,14 +11,12 @@ import { goBack } from "../slices/navigationSlice";
 import { ChevronLeftIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import CollectionCard from "../components/CollectionCard";
 import { useState } from "react";
-import { setStorage } from "../../../shared/chrome-utils";
-import { STORAGE_KEYS } from "../../../shared/types";
-import { CollectionInstance } from "../lib/collectionInstance";
-import { addCollection } from "../slices/collectionSlice";
-import { findCollectionType, getFilteredCollection } from "../utils/utils";
+import { getFilteredCollection } from "../utils/utils";
+import UseDatabase from "../hooks/UseDatabase";
 
 const CollectionsPage = () => {
   const dispatch = useAppDispatch();
+  const { insertCollection } = UseDatabase();
 
   const currentScreen = useAppSelector(
     (state) => state.navigation.currentScreen
@@ -33,24 +31,9 @@ const CollectionsPage = () => {
     useState<boolean>(false);
 
   const handleCreateCollection = () => {
-    handleAddHandle();
+    insertCollection(collectionName);
+    setCollectionName("");
     setIsCollectionDialogOpen(false);
-  };
-
-  const handleAddHandle = async () => {
-    const collection = new CollectionInstance(
-      collectionName,
-      findCollectionType(urlType)
-    );
-
-    const updatedCollections = [...collections, collection.getCollection()];
-
-    await setStorage(
-      STORAGE_KEYS.COLLECTION,
-      JSON.stringify(updatedCollections)
-    );
-
-    dispatch(addCollection(collection.getCollection()));
   };
 
   if (!currentScreen) {

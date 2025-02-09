@@ -3,13 +3,13 @@ import { DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { goBack } from "../slices/navigationSlice";
 import ChatCard from "../components/ChatCard";
-import { addAsFavorite } from "../slices/collectionSlice";
-import { setStorage } from "../../../shared/chrome-utils";
-import { Chat, STORAGE_KEYS } from "../../../shared/types";
-import { getFilteredCollection } from "../utils/utils";
+import { Chat } from "../../../shared/types";
+import { getFilteredCollection, isCurrentChatFound } from "../utils/utils";
+import UseDatabase from "../hooks/UseDatabase";
 
 const ChatListPage = () => {
   const dispatch = useAppDispatch();
+  const { insertChat, setAsFavorite, deleteCollection } = UseDatabase();
   const currentScreen = useAppSelector(
     (state) => state.navigation.currentScreen
   );
@@ -17,12 +17,14 @@ const ChatListPage = () => {
   const collectionId = currentScreen?.params?.collectionId || null;
   const urlType = useAppSelector((state) => state.config.urlType);
   const chats = useAppSelector((state) => state.chat.chats);
+  const currentChatDetails = useAppSelector(
+    (state) => state.config.currentChatDetails
+  );
   const collections = getFilteredCollection(
     useAppSelector((state) => state.collection.collections),
     urlType
   );
   const themeColor = useAppSelector((state) => state.config.themeColor);
-
   const tagId = currentScreen?.params?.tagId || null;
 
   const getShortTxt = (text: string): string => {
@@ -44,30 +46,10 @@ const ChatListPage = () => {
   };
 
   const getChatList = (): Chat[] => {
-    console.log("collectionId", collectionId);
-    console.log("tagId", tagId);
     if (collectionId) return getFilesByCollectionId();
     if (tagId) return getChatsByTagId();
 
     return chats;
-  };
-
-  const handleFavorite = async () => {
-    dispatch(addAsFavorite({ collectionId }));
-    const updatedCollections = collections.map((c) => {
-      if (c.id === collectionId) {
-        return {
-          ...c,
-          isFavorite: !c.isFavorite,
-        };
-      }
-      return c;
-    });
-
-    await setStorage(
-      STORAGE_KEYS.COLLECTION,
-      JSON.stringify(updatedCollections)
-    );
   };
 
   const getFavoriteStatus = (): boolean => {
@@ -126,11 +108,24 @@ const ChatListPage = () => {
               </DropdownMenu.Trigger>
               <DropdownMenu.Content size="1" color="gray" variant="soft">
                 <DropdownMenu.Item>Rename</DropdownMenu.Item>
-                <DropdownMenu.Item>Save Current Chat</DropdownMenu.Item>
-                <DropdownMenu.Item onClick={() => handleFavorite()}>
+                <DropdownMenu.Item
+                  disabled={!isCurrentChatFound(currentChatDetails)}
+                  onClick={() => insertChat(collectionId)}
+                >
+                  Save Current Chat
+                </DropdownMenu.Item>
+                <DropdownMenu.Item onClick={() => setAsFavorite(collectionId)}>
                   {getFavoriteStatus() ? "Remove From Favorite" : "Favorite"}
                 </DropdownMenu.Item>
-                <DropdownMenu.Item color="red">Delete</DropdownMenu.Item>
+                <DropdownMenu.Item
+                  onClick={() => {
+                    deleteCollection(collectionId);
+                    dispatch(goBack());
+                  }}
+                  color="red"
+                >
+                  Delete
+                </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Root>
           )}

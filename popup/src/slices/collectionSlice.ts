@@ -23,26 +23,10 @@ const collectionSlice = createSlice({
     },
     loadCollections: (state, action: PayloadAction<_Collection[]>) => {
       state.collections = action.payload;
-      console.log(state.collections);
-    },
-    addAsFavorite: (state, action: PayloadAction<{ collectionId: string }>) => {
-      state.collections = state.collections.map((c) => {
-        if (c.id === action.payload.collectionId) {
-          return {
-            ...c,
-            isFavorite: !c.isFavorite,
-          };
-        }
-        return c;
-      });
     },
   },
 });
 
-export const {
-  addCollection,
-  deleteCollection,
-  loadCollections,
-  addAsFavorite,
-} = collectionSlice.actions;
+export const { addCollection, deleteCollection, loadCollections } =
+  collectionSlice.actions;
 export default collectionSlice.reducer;
