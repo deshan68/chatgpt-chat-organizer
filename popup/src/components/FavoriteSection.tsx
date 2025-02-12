@@ -3,10 +3,13 @@ import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { navigate, PagesName } from "../slices/navigationSlice";
 import { HeartIcon } from "@radix-ui/react-icons";
 import { getFilteredCollection } from "../utils/utils";
+import UseDatabase from "../hooks/UseDatabase";
 
 const FavoriteSection = () => {
   const dispatch = useAppDispatch();
-  const collections = useAppSelector((state) => state.collection.collections);
+
+  const { collections } = UseDatabase();
+
   const urlType = useAppSelector((state) => state.config.urlType);
   const themeColor = useAppSelector((state) => state.config.themeColor);
 

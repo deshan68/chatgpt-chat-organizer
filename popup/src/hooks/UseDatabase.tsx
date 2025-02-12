@@ -3,7 +3,11 @@ import { Chat, STORAGE_KEYS } from "../../../shared/types";
 import { CollectionInstance } from "../lib/collectionInstance";
 import { loadChats } from "../slices/chatSlice";
 import { addCollection, loadCollections } from "../slices/collectionSlice";
-import { findCollectionType, isCurrentChatFound } from "../utils/utils";
+import {
+  findCollectionType,
+  getFilteredCollection,
+  isCurrentChatFound,
+} from "../utils/utils";
 import { useAppDispatch, useAppSelector } from "./UseReduxType";
 
 const UseDatabase = () => {
@@ -13,6 +17,10 @@ const UseDatabase = () => {
   const urlType = useAppSelector((state) => state.config.urlType);
   const currentChatDetails = useAppSelector(
     (state) => state.config.currentChatDetails
+  );
+  const filteredCollections = getFilteredCollection(
+    useAppSelector((state) => state.collection.collections),
+    urlType
   );
 
   const insertChat = async (collectionId: string) => {
@@ -166,6 +174,9 @@ const UseDatabase = () => {
   };
 
   return {
+    collections,
+    filteredCollections,
+    chats,
     insertChat,
     insertCollection,
     setAsFavorite,

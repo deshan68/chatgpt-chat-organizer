@@ -15,18 +15,12 @@ import { _Collection, Chat, STORAGE_KEYS } from "../../../shared/types";
 import { useAppSelector } from "../hooks/UseReduxType";
 import { useAppContext } from "../context/AppProvider";
 import InvalidUrlMessage from "../components/InvalidUrlMessage";
-import { getFilteredCollection } from "../utils/utils";
 import UseDatabase from "../hooks/UseDatabase";
 
 const HomePage = () => {
   const { isValidUrl } = useAppContext();
-  const { insertChat } = UseDatabase();
+  const { filteredCollections, insertChat } = UseDatabase();
 
-  const urlType = useAppSelector((state) => state.config.urlType);
-  const filteredCollections = getFilteredCollection(
-    useAppSelector((state) => state.collection.collections),
-    urlType
-  );
   const themeColor = useAppSelector((state) => state.config.themeColor);
 
   const lst1: CategoryListType[] = [

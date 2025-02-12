@@ -4,28 +4,31 @@ import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { goBack } from "../slices/navigationSlice";
 import ChatCard from "../components/ChatCard";
 import { Chat } from "../../../shared/types";
-import { getFilteredCollection, isCurrentChatFound } from "../utils/utils";
+import { isCurrentChatFound } from "../utils/utils";
 import UseDatabase from "../hooks/UseDatabase";
 import { useConfirmation } from "../context/ConfirmationContext";
 
 const ChatListPage = () => {
   const dispatch = useAppDispatch();
-  const { insertChat, setAsFavorite, deleteCollection } = UseDatabase();
+
+  const {
+    chats,
+    filteredCollections,
+    insertChat,
+    setAsFavorite,
+    deleteCollection,
+  } = UseDatabase();
   const { showConfirmation } = useConfirmation();
+
   const currentScreen = useAppSelector(
     (state) => state.navigation.currentScreen
   );
   const his = useAppSelector((state) => state.navigation.history);
   const collectionId = currentScreen?.params?.collectionId || null;
-  const urlType = useAppSelector((state) => state.config.urlType);
-  const chats = useAppSelector((state) => state.chat.chats);
   const currentChatDetails = useAppSelector(
     (state) => state.config.currentChatDetails
   );
-  const collections = getFilteredCollection(
-    useAppSelector((state) => state.collection.collections),
-    urlType
-  );
+
   const themeColor = useAppSelector((state) => state.config.themeColor);
   const tagId = currentScreen?.params?.tagId || null;
 
@@ -36,7 +39,9 @@ const ChatListPage = () => {
   };
 
   const getFilesByCollectionId = (): Chat[] => {
-    const filteredIds = collections.find((c) => c.id === collectionId)?.chats;
+    const filteredIds = filteredCollections.find(
+      (c) => c.id === collectionId
+    )?.chats;
     const filteredChats = chats.filter((c) => filteredIds?.includes(c.id));
     return filteredChats;
   };
@@ -53,7 +58,7 @@ const ChatListPage = () => {
   };
 
   const getFavoriteStatus = (): boolean => {
-    const isFavorite = collections.find(
+    const isFavorite = filteredCollections.find(
       (c) => c.id === collectionId
     )!.isFavorite;
     return isFavorite;

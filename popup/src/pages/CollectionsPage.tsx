@@ -16,12 +16,11 @@ import UseDatabase from "../hooks/UseDatabase";
 
 const CollectionsPage = () => {
   const dispatch = useAppDispatch();
-  const { insertCollection } = UseDatabase();
+  const { collections, insertCollection } = UseDatabase();
 
   const currentScreen = useAppSelector(
     (state) => state.navigation.currentScreen
   );
-  const collections = useAppSelector((state) => state.collection.collections);
   const themeColor = useAppSelector((state) => state.config.themeColor);
   const urlType = useAppSelector((state) => state.config.urlType);
   const his = useAppSelector((state) => state.navigation.history);
