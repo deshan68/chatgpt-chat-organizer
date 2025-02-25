@@ -47,6 +47,10 @@ function getInnerTextByHref() {
   return null;
 }
 
+export const navigateToChat = async (chatUrl: string) => {
+  window.location.href = chatUrl;
+};
+
 export const onPushExcalidrawFile = async (
   excalidraw: string
 ): Promise<void> => {

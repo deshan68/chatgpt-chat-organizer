@@ -9,8 +9,8 @@ export const checkIsValidUrl = (url: string): boolean => {
 };
 
 export function checkUrlType(url: string): UrlCheckResult {
-  const isDeepSeek = url.includes("https://chat.deepseek.com/");
-  const isChatGPT = url.includes("https://chatgpt.com/");
+  const isDeepSeek = url.includes("https://chat.deepseek.com");
+  const isChatGPT = url.includes("https://chatgpt.com");
 
   return {
     isDeepSeek,

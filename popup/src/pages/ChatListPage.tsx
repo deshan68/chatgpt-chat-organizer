@@ -12,8 +12,8 @@ const ChatListPage = () => {
   const dispatch = useAppDispatch();
 
   const {
-    chats,
     filteredCollections,
+    filteredChats,
     insertChat,
     setAsFavorite,
     deleteCollection,
@@ -42,19 +42,21 @@ const ChatListPage = () => {
     const filteredIds = filteredCollections.find(
       (c) => c.id === collectionId
     )?.chats;
-    const filteredChats = chats.filter((c) => filteredIds?.includes(c.id));
-    return filteredChats;
+    const _filteredChats = filteredChats.filter((c) =>
+      filteredIds?.includes(c.id)
+    );
+    return _filteredChats;
   };
 
   const getChatsByTagId = (): Chat[] => {
-    return chats.filter((c) => c.tags.includes(tagId));
+    return filteredChats.filter((c) => c.tags.includes(tagId));
   };
 
   const getChatList = (): Chat[] => {
     if (collectionId) return getFilesByCollectionId();
     if (tagId) return getChatsByTagId();
 
-    return chats;
+    return filteredChats;
   };
 
   const getFavoriteStatus = (): boolean => {
@@ -149,7 +151,13 @@ const ChatListPage = () => {
 
       <Flex gapY="2" direction={"column"}>
         {getChatList().map((c) => (
-          <ChatCard id={c.id} date={c.date} name={c.name} tags={c.tags} />
+          <ChatCard
+            id={c.id}
+            date={c.date}
+            name={c.name}
+            tags={c.tags}
+            chatUrl={c.chatUrl}
+          />
         ))}
       </Flex>
     </Flex>

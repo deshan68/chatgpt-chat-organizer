@@ -5,6 +5,7 @@ import { loadChats } from "../slices/chatSlice";
 import { addCollection, loadCollections } from "../slices/collectionSlice";
 import {
   findCollectionType,
+  getFilteredChat,
   getFilteredCollection,
   isCurrentChatFound,
 } from "../utils/utils";
@@ -20,6 +21,10 @@ const UseDatabase = () => {
   );
   const filteredCollections = getFilteredCollection(
     useAppSelector((state) => state.collection.collections),
+    urlType
+  );
+  const filteredChats = getFilteredChat(
+    useAppSelector((state) => state.chat.chats),
     urlType
   );
 
@@ -63,6 +68,8 @@ const UseDatabase = () => {
       id: currentChatDetails.chatID,
       name: currentChatDetails.chatName!,
       date: new Date().toISOString(),
+      chatUrl: currentChatDetails.chatUrl,
+      chatType: findCollectionType(urlType),
       tags: [],
     };
 
@@ -177,6 +184,7 @@ const UseDatabase = () => {
     collections,
     filteredCollections,
     chats,
+    filteredChats,
     insertChat,
     insertCollection,
     setAsFavorite,

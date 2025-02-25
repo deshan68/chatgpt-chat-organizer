@@ -23,7 +23,7 @@ const FavoriteSection = () => {
 
   return (
     <Flex direction={"column"} gapY={"1"} mt={"1"}>
-      <Text size="2" weight="regular">
+      <Text size="1" weight="medium">
         Favorite
       </Text>
       <Flex

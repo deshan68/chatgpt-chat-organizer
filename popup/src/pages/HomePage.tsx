@@ -1,7 +1,7 @@
-import { Button, Dialog, Flex } from "@radix-ui/themes";
+import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
 import HomeHeader from "../components/HomeHeader";
 import Category, { CategoryListType } from "../components/Category";
-import { LaptopIcon } from "@radix-ui/react-icons";
+import { ChatBubbleIcon, LaptopIcon } from "@radix-ui/react-icons";
 import { PagesName } from "../slices/navigationSlice";
 import FavoriteSection from "../components/FavoriteSection";
 import TagsSection from "../components/TagsSection";
@@ -27,6 +27,10 @@ const HomePage = () => {
     {
       icon: <LaptopIcon color={themeColor} />,
       title: "All Collections",
+    },
+    {
+      icon: <ChatBubbleIcon color={themeColor} />,
+      title: "All Chats",
     },
   ];
 
@@ -78,7 +82,7 @@ const HomePage = () => {
           paddingBlock: "8px",
           backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-          display: "none",
+          // display: "none",
         }}
         onClick={() => show()}
       >
@@ -96,7 +100,7 @@ const HomePage = () => {
           paddingBlock: "8px",
           backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-          display: "none",
+          // display: "none",
         }}
         onClick={() => clear()}
       >
@@ -122,19 +126,30 @@ const HomePage = () => {
             Save Chat
           </Button>
         </Dialog.Trigger>
-        <Dialog.Content maxWidth={"200px"} style={{ borderRadius: "3%" }}>
+        <Dialog.Content
+          maxWidth={"260px"}
+          style={{ borderRadius: "6px", maxHeight: "380px", overflowY: "auto" }}
+        >
           <Flex direction="column">
             {filteredCollections.map((c) => (
-              <Button
+              <Text
+                size={"1"}
                 onClick={() => insertChat(c.id)}
-                size="1"
                 mb="1"
-                variant="soft"
-                color="gray"
-                // disabled={isAlreadyAdded(c.id)}
+                style={{
+                  cursor: "pointer",
+                  paddingInline: 10,
+                  paddingBlock: 5,
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#EAEAEA")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "transparent")
+                }
               >
                 {c.name}
-              </Button>
+              </Text>
             ))}
           </Flex>
         </Dialog.Content>

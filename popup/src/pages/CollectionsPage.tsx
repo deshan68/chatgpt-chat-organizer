@@ -128,7 +128,7 @@ const CollectionsPage = () => {
                 placeholder="Enter collection name"
                 value={collectionName}
                 onChange={(e) => {
-                  if (e.target.value.length <= 12) {
+                  if (e.target.value.length <= 30) {
                     setCollectionName(e.target.value);
                   }
                 }}

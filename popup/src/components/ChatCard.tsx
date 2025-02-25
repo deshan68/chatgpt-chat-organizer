@@ -5,12 +5,19 @@ import {
   DotsVerticalIcon,
 } from "@radix-ui/react-icons";
 import { tagList } from "../constants/constants";
-import { Chat, Tag } from "../../../shared/types";
+import { MessageTypes, Tag } from "../../../shared/types";
 import { useState } from "react";
 import UseDatabase from "../hooks/UseDatabase";
 import { useConfirmation } from "../context/ConfirmationContext";
-
-const ChatCard = ({ id, name, tags, date }: Chat) => {
+import { sendMessageToContent } from "../../../shared/chrome-utils";
+interface ChatCardProps {
+  id: string;
+  name: string;
+  tags: string[];
+  date: string;
+  chatUrl: string;
+}
+const ChatCard = ({ id, name, tags, date, chatUrl }: ChatCardProps) => {
   const { insertTagToChat, deleteChat } = UseDatabase();
   const { showConfirmation } = useConfirmation();
   const [openTagListModal, setOpenTagListModal] = useState(false);
@@ -75,21 +82,24 @@ const ChatCard = ({ id, name, tags, date }: Chat) => {
     );
   };
 
+  const handleNavigateToChat = async (chatUrl: string) => {
+    await sendMessageToContent({
+      type: MessageTypes.NAVIGATE_TO_CHAT,
+      body: { chatUrl },
+    });
+  };
+
   return (
-    <Flex
-      pl="1"
-      gapX={"4"}
-      style={{
-        cursor: "default",
-      }}
-    >
+    <Flex pl="1" gapX={"4"}>
       <Flex
         py={"2"}
         align={"center"}
         width={"100%"}
         style={{
           borderBottom: "1px solid #EAEAEA",
+          cursor: "pointer",
         }}
+        onClick={() => handleNavigateToChat(chatUrl)}
       >
         <Flex direction={"column"}>
           <Text weight="bold" trim="both" style={{ fontSize: 11 }}>
@@ -114,22 +124,21 @@ const ChatCard = ({ id, name, tags, date }: Chat) => {
             />
           ))}
         </Flex>
-
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger style={{ padding: 6, cursor: "pointer" }}>
-            <DotsVerticalIcon color={"#87878C"} height={10} width={10} />
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Content size="1" color="gray" variant="soft">
-            <DropdownMenu.Item onClick={() => setOpenTagListModal(true)}>
-              Add Tag
-            </DropdownMenu.Item>
-            <DropdownMenu.Item color="red" onClick={() => handleDeleteChat()}>
-              Delete
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Root>
       </Flex>
       <TagListModal />
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger style={{ padding: 6, cursor: "pointer" }}>
+          <DotsVerticalIcon color={"#87878C"} height={10} width={10} />
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content size="1" color="gray" variant="soft">
+          <DropdownMenu.Item onClick={() => setOpenTagListModal(true)}>
+            Add Tag
+          </DropdownMenu.Item>
+          <DropdownMenu.Item color="red" onClick={() => handleDeleteChat()}>
+            Delete
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
     </Flex>
   );
 };

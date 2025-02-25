@@ -1,6 +1,7 @@
 import { Message, MessageTypes, UrlCheckResult } from "../shared/types";
 import {
   getCurrentChatDetails,
+  navigateToChat,
   onOpenPopup,
   onPullFileNameFromExcalidraw,
   onPushExcalidrawFile,
@@ -23,6 +24,10 @@ const registerEventListeners = () => {
               sendResponse(chatDetails);
             }
           );
+          return true;
+        }
+        case MessageTypes.NAVIGATE_TO_CHAT: {
+          navigateToChat(message.body?.chatUrl as string);
           return true;
         }
         case MessageTypes.PUSH_EXCALIDRAW_FILE: {

@@ -1,5 +1,6 @@
 import {
   _Collection,
+  Chat,
   ChatDetails,
   CollectionType,
   UrlCheckResult,
@@ -20,6 +21,13 @@ export const getFilteredCollection = (
   return collections.filter(
     (c) => c.collectionType === findCollectionType(urlType)
   );
+};
+
+export const getFilteredChat = (
+  chat: Chat[],
+  urlType: UrlCheckResult
+): Chat[] => {
+  return chat.filter((c) => c.chatType === findCollectionType(urlType));
 };
 
 export const isCurrentChatFound = (currentChat: ChatDetails): boolean => {

@@ -12,6 +12,7 @@ export enum MessageTypes {
   PUSH_CURRENT_WORKING_FILE_NAME = "PUSH_CURRENT_WORKING_FILE_NAME",
   PULL_CURRENT_WORKING_FILE_NAME = "PULL_CURRENT_WORKING_FILE_NAME",
   PULL_CURRENT_URL_TYPE = "PULL_CURRENT_URL_TYPE",
+  NAVIGATE_TO_CHAT = "NAVIGATE_TO_CHAT",
 }
 
 export type Message = {
@@ -34,6 +35,7 @@ export enum CollectionType {
   CHAT_GPT = "chat-gpt",
   DEEP_SEEK = "deep-seek",
 }
+
 export interface _Collection {
   id: string;
   name: string;
@@ -47,7 +49,9 @@ export interface Chat {
   id: string;
   name: string;
   date: string;
+  chatUrl: string;
   tags: string[];
+  chatType: CollectionType;
 }
 
 export interface Tag {

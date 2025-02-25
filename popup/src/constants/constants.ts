@@ -2,7 +2,7 @@ import AllCollectionsPage from "../pages/AllCollectionsPage";
 import HomePage from "../pages/HomePage";
 import CollectionsPage from "../pages/CollectionsPage";
 import ChatListPage from "../pages/ChatListPage";
-import { _Collection, Chat, Tag } from "../../../shared/types";
+import { _Collection, Tag } from "../../../shared/types";
 
 export const screens = {
   HomePage: HomePage,
@@ -45,21 +45,6 @@ export const warningMessage = "Please choose the file before start Drawing";
 //     chats: ["f1"],
 //   },
 // ];
-
-export const chatList: Chat[] = [
-  {
-    id: "f1",
-    name: "File 01",
-    date: "2024-01-12",
-    tags: ["t1", "t2"],
-  },
-  {
-    id: "f2",
-    name: "File 02",
-    date: "2024-01-12",
-    tags: ["t2"],
-  },
-];
 
 export const tagList: Tag[] = [
   {
