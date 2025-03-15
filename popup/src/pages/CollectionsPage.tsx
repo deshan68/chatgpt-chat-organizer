@@ -2,6 +2,7 @@ import {
   Button,
   Dialog,
   DropdownMenu,
+  Em,
   Flex,
   Text,
   TextField,
@@ -104,16 +105,24 @@ const CollectionsPage = () => {
       </Flex>
 
       <Flex gapY="2" direction={"column"}>
-        {getFilteredCollection(collections, urlType).map((l) => (
-          <CollectionCard
-            id={l.id}
-            name={l.name}
-            chats={l.chats}
-            date={l.date}
-            isFavorite={l.isFavorite}
-            key={l.id}
-          />
-        ))}
+        {getFilteredCollection(collections, urlType).length === 0 ? (
+          <Text size="1" weight="medium" style={{ textAlign: "center" }}>
+            <Em>Nothing to show</Em>
+          </Text>
+        ) : (
+          <>
+            {getFilteredCollection(collections, urlType).map((l) => (
+              <CollectionCard
+                id={l.id}
+                name={l.name}
+                chats={l.chats}
+                date={l.date}
+                isFavorite={l.isFavorite}
+                key={l.id}
+              />
+            ))}
+          </>
+        )}
       </Flex>
 
       <Dialog.Root open={isCollectionDialogOpen}>

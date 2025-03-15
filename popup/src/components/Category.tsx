@@ -5,14 +5,14 @@ import { useAppDispatch } from "../hooks/UseReduxType";
 export interface CategoryListType {
   icon: any;
   title: string;
+  goto: PagesName;
 }
 
 interface CategoryProps {
   list: CategoryListType[];
-  goto: PagesName;
 }
 
-const Category = ({ list, goto }: CategoryProps) => {
+const Category = ({ list }: CategoryProps) => {
   const dispatch = useAppDispatch();
 
   return (
@@ -34,7 +34,7 @@ const Category = ({ list, goto }: CategoryProps) => {
             onClick={() =>
               dispatch(
                 navigate({
-                  name: goto,
+                  name: i.goto,
                   title: i.title,
                 })
               )

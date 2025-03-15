@@ -1,5 +1,5 @@
 import { CaretDownIcon, ChevronLeftIcon } from "@radix-ui/react-icons";
-import { DropdownMenu, Flex, Text } from "@radix-ui/themes";
+import { DropdownMenu, Em, Flex, Text } from "@radix-ui/themes";
 import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { goBack } from "../slices/navigationSlice";
 import ChatCard from "../components/ChatCard";
@@ -80,6 +80,7 @@ const ChatListPage = () => {
   if (!currentScreen) {
     return <div>No screen to display</div>;
   }
+
   return (
     <Flex direction="column" px="4">
       {/* header */}
@@ -150,15 +151,23 @@ const ChatListPage = () => {
       </Flex>
 
       <Flex gapY="2" direction={"column"}>
-        {getChatList().map((c) => (
-          <ChatCard
-            id={c.id}
-            date={c.date}
-            name={c.name}
-            tags={c.tags}
-            chatUrl={c.chatUrl}
-          />
-        ))}
+        {getChatList().length === 0 ? (
+          <Text size="1" weight="medium" style={{ textAlign: "center" }}>
+            <Em>Nothing to show</Em>
+          </Text>
+        ) : (
+          <>
+            {getChatList().map((c) => (
+              <ChatCard
+                id={c.id}
+                date={c.date}
+                name={c.name}
+                tags={c.tags}
+                chatUrl={c.chatUrl}
+              />
+            ))}
+          </>
+        )}
       </Flex>
     </Flex>
   );

@@ -27,10 +27,12 @@ const HomePage = () => {
     {
       icon: <LaptopIcon color={themeColor} />,
       title: "All Collections",
+      goto: PagesName.CollectionsPage,
     },
     {
       icon: <ChatBubbleIcon color={themeColor} />,
       title: "All Chats",
+      goto: PagesName.ChatListPage,
     },
   ];
 
@@ -65,7 +67,7 @@ const HomePage = () => {
           height: "500px",
         }}
       >
-        <Category list={lst1} goto={PagesName.CollectionsPage} />
+        <Category list={lst1} />
         <FavoriteSection />
         <TagsSection />
       </Flex>
