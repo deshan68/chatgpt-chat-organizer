@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "ChatGPT Chat Manager V3",
+  "name": "ChatGPT & DeepSeek Chat Organizer",
   "version": "3.0.1",
   "description": "A web extension that allows users to create folders and save their chats in relevant folders.",
   "icons": {
