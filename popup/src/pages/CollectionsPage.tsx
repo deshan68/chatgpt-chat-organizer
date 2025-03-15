@@ -41,9 +41,9 @@ const CollectionsPage = () => {
   }
 
   return (
-    <Flex direction="column" px="4">
+    <Flex direction="column" style={{ height: "100%" }}>
       {/* header */}
-      <Flex my="4" justify={"center"} align={"center"}>
+      <Flex my="4" px="4" justify={"center"} align={"center"}>
         <Flex
           onClick={() => dispatch(goBack())}
           style={{ cursor: "pointer", flex: 1 }}
@@ -104,7 +104,15 @@ const CollectionsPage = () => {
         </Flex>
       </Flex>
 
-      <Flex gapY="2" direction={"column"}>
+      <Flex
+        gapY="2"
+        px="4"
+        direction={"column"}
+        style={{
+          overflowY: "scroll",
+          height: "550px",
+        }}
+      >
         {getFilteredCollection(collections, urlType).length === 0 ? (
           <Text size="1" weight="medium" style={{ textAlign: "center" }}>
             <Em>Nothing to show</Em>
