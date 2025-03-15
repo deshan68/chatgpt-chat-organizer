@@ -84,7 +84,7 @@ const HomePage = () => {
           paddingBlock: "8px",
           backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-          // display: "none",
+          display: "none",
         }}
         onClick={() => show()}
       >
@@ -102,7 +102,7 @@ const HomePage = () => {
           paddingBlock: "8px",
           backgroundColor: themeColor,
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-          // display: "none",
+          display: "none",
         }}
         onClick={() => clear()}
       >
@@ -123,6 +123,7 @@ const HomePage = () => {
               paddingBlock: "8px",
               backgroundColor: themeColor,
               boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+              display: "none",
             }}
           >
             Save Chat

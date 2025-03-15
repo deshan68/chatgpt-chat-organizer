@@ -4,9 +4,9 @@ import { useAppDispatch, useAppSelector } from "../hooks/UseReduxType";
 import { goBack } from "../slices/navigationSlice";
 import ChatCard from "../components/ChatCard";
 import { Chat } from "../../../shared/types";
-import { isCurrentChatFound } from "../utils/utils";
 import UseDatabase from "../hooks/UseDatabase";
 import { useConfirmation } from "../context/ConfirmationContext";
+import { isCurrentChatFound } from "../utils/utils";
 
 const ChatListPage = () => {
   const dispatch = useAppDispatch();
@@ -38,7 +38,7 @@ const ChatListPage = () => {
     return shortedTxt;
   };
 
-  const getFilesByCollectionId = (): Chat[] => {
+  const getChatsByCollectionId = (): Chat[] => {
     const filteredIds = filteredCollections.find(
       (c) => c.id === collectionId
     )?.chats;
@@ -53,7 +53,7 @@ const ChatListPage = () => {
   };
 
   const getChatList = (): Chat[] => {
-    if (collectionId) return getFilesByCollectionId();
+    if (collectionId) return getChatsByCollectionId();
     if (tagId) return getChatsByTagId();
 
     return filteredChats;
@@ -126,9 +126,13 @@ const ChatListPage = () => {
                 />
               </DropdownMenu.Trigger>
               <DropdownMenu.Content size="1" color="gray" variant="soft">
-                <DropdownMenu.Item>Rename</DropdownMenu.Item>
+                {/* <DropdownMenu.Item>Rename</DropdownMenu.Item> */}
                 <DropdownMenu.Item
-                  disabled={!isCurrentChatFound(currentChatDetails)}
+                  disabled={
+                    getChatsByCollectionId().some(
+                      (c) => c.chatUrl === currentChatDetails.chatUrl
+                    ) || !isCurrentChatFound(currentChatDetails)
+                  }
                   onClick={() => insertChat(collectionId)}
                 >
                   Save Current Chat
